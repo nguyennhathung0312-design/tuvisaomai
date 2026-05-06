@@ -157,6 +157,46 @@ section{position:relative;z-index:1;padding:5rem 1.5rem}
 .fsub:hover{background:var(--red-deep)}
 .fnote{font-size:11px;color:rgba(255,255,255,.3);margin-top:.85rem;text-align:center}
 
+/* ── AI RESULT PANEL ── */
+#ai-result{display:none;max-width:700px;margin:2.5rem auto 0;text-align:left}
+#ai-result.visible{display:block}
+
+.air-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(192,24,42,.3)}
+.air-avatar{width:40px;height:40px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.air-meta{flex:1}
+.air-name{font-family:var(--serif);font-size:1rem;font-weight:600;color:#fff}
+.air-sub{font-size:11px;color:var(--gold);letter-spacing:.06em;margin-top:2px}
+
+.air-body{background:rgba(255,255,255,.04);border:1px solid rgba(192,24,42,.25);padding:2rem 1.75rem}
+@media(max-width:480px){.air-body{padding:1.4rem 1.25rem}}
+
+.air-section{margin-bottom:1.75rem}
+.air-section:last-child{margin-bottom:0}
+.air-tag{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+.air-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.95}
+.air-text strong{color:var(--gold-lt);font-weight:600}
+
+/* Typing cursor */
+.cursor{display:inline-block;width:2px;height:1em;background:var(--gold);margin-left:2px;vertical-align:text-bottom;animation:blink .7s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Loading dots */
+.air-loading{display:flex;align-items:center;gap:.5rem;padding:1.5rem;color:rgba(255,255,255,.45);font-size:13px;font-style:italic}
+.dots{display:flex;gap:4px}
+.dots span{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.3;animation:dot 1.2s ease-in-out infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+.air-footer{margin-top:1.25rem;text-align:center;font-size:11px;color:rgba(255,255,255,.25);font-style:italic}
+
+/* API key notice */
+.air-key-wrap{max-width:700px;margin:2rem auto 0}
+.air-key-input{width:100%;padding:.65rem .9rem;background:rgba(255,255,255,.05);border:1px solid rgba(192,24,42,.3);color:#fff;font-size:13px;font-family:var(--sans);outline:none;border-radius:2px;letter-spacing:.04em}
+.air-key-input:focus{border-color:var(--gold)}
+.air-key-input::placeholder{color:rgba(255,255,255,.25)}
+.air-key-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);display:block;margin-bottom:5px}
+
 /* FOOTER */
 footer{background:var(--dark);color:rgba(255,255,255,.4);padding:3.5rem 1.5rem}
 .fi2{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem}
@@ -411,23 +451,67 @@ footer{background:var(--dark);color:rgba(255,255,255,.4);padding:3.5rem 1.5rem}
   <div class="sl2" style="color:var(--gold)">Bắt đầu</div>
   <h2 class="st" style="color:#fff;margin:0 auto 1rem;max-width:500px">Lá số của bạn<br>đang chờ được <em style="color:var(--gold-lt)">đọc đúng</em></h2>
   <p style="font-size:14px;color:rgba(255,255,255,.55);max-width:420px;margin:0 auto 2.5rem;line-height:1.85">Miễn phí để bắt đầu. Không cần thanh toán để xem lá số tổng quan.</p>
-  <div class="fcard">
-    <div class="fg"><label class="flabel">Họ và tên</label><input class="finput" type="text" placeholder="Nguyễn Văn A"></div>
+
+  <!-- API KEY INPUT -->
+  <div class="air-key-wrap">
+    <label class="air-key-label">🔑 OpenAI API Key của bạn</label>
+    <input class="air-key-input" id="apiKey" type="password" placeholder="sk-proj-... (chỉ lưu trong trình duyệt, không gửi đi đâu khác)">
+  </div>
+
+  <div class="fcard" style="margin-top:1rem">
+    <div class="fg"><label class="flabel">Họ và tên</label><input class="finput" id="f-name" type="text" placeholder="Nguyễn Văn A"></div>
     <div class="frow">
-      <div class="fg"><label class="flabel">Ngày sinh (dương lịch)</label><input class="finput" type="text" placeholder="dd/mm/yyyy"></div>
+      <div class="fg">
+        <label class="flabel">Ngày sinh (dương lịch)</label>
+        <input class="finput" id="f-dob" type="text" placeholder="dd/mm/yyyy">
+      </div>
       <div class="fg"><label class="flabel">Giờ sinh</label>
-        <select class="finput">
+        <select class="finput" id="f-hour">
           <option value="">Chọn giờ</option>
-          <option>Tý (23–01h)</option><option>Sửu (01–03h)</option><option>Dần (03–05h)</option>
-          <option>Mão (05–07h)</option><option>Thìn (07–09h)</option><option>Tỵ (09–11h)</option>
-          <option>Ngọ (11–13h)</option><option>Mùi (13–15h)</option><option>Thân (15–17h)</option>
-          <option>Dậu (17–19h)</option><option>Tuất (19–21h)</option><option>Hợi (21–23h)</option>
+          <option value="Tý (23–01h)">Tý (23–01h)</option>
+          <option value="Sửu (01–03h)">Sửu (01–03h)</option>
+          <option value="Dần (03–05h)">Dần (03–05h)</option>
+          <option value="Mão (05–07h)">Mão (05–07h)</option>
+          <option value="Thìn (07–09h)">Thìn (07–09h)</option>
+          <option value="Tỵ (09–11h)">Tỵ (09–11h)</option>
+          <option value="Ngọ (11–13h)">Ngọ (11–13h)</option>
+          <option value="Mùi (13–15h)">Mùi (13–15h)</option>
+          <option value="Thân (15–17h)">Thân (15–17h)</option>
+          <option value="Dậu (17–19h)">Dậu (17–19h)</option>
+          <option value="Tuất (19–21h)">Tuất (19–21h)</option>
+          <option value="Hợi (21–23h)">Hợi (21–23h)</option>
         </select>
       </div>
     </div>
-    <div class="fg"><label class="flabel">Giới tính</label><div class="rg"><label class="rl"><input type="radio" name="g" style="accent-color:var(--red)"> Nam</label><label class="rl"><input type="radio" name="g" style="accent-color:var(--red)"> Nữ</label></div></div>
-    <button class="fsub">Lập lá số miễn phí</button>
+    <div class="fg"><label class="flabel">Giới tính</label>
+      <div class="rg">
+        <label class="rl"><input type="radio" name="g" value="Nam" style="accent-color:var(--red)" checked> Nam</label>
+        <label class="rl"><input type="radio" name="g" value="Nữ" style="accent-color:var(--red)"> Nữ</label>
+      </div>
+    </div>
+    <button class="fsub" id="submitBtn" onclick="submitForm()">Lập lá số miễn phí</button>
     <p class="fnote">Không cần thanh toán để xem lá số ban đầu.</p>
+  </div>
+
+  <!-- AI RESULT PANEL -->
+  <div id="ai-result">
+    <div class="air-body" id="air-body">
+      <div class="air-loading" id="air-loading">
+        <div class="dots"><span></span><span></span><span></span></div>
+        Đang luận giải lá số của bạn...
+      </div>
+      <div id="air-content" style="display:none">
+        <div class="air-header">
+          <div class="air-avatar">✦</div>
+          <div class="air-meta">
+            <div class="air-name" id="air-person-name"></div>
+            <div class="air-sub">Luận giải bởi AI · Tử Vi Sao Mai</div>
+          </div>
+        </div>
+        <div id="air-sections"></div>
+      </div>
+    </div>
+    <p class="air-footer">Kết quả mang tính tham khảo và chiêm nghiệm — không thay thế tư vấn chuyên môn.</p>
   </div>
 </section>
 
@@ -497,6 +581,208 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
   });
 });
+
+/* ══════════════════════════════════════════════
+   AI TỬ VI — tích hợp GPT-4o qua OpenAI API
+   ══════════════════════════════════════════════ */
+
+// Hàm tính Can Chi từ năm dương lịch
+function getCanChi(year) {
+  const can = ['Canh','Tân','Nhâm','Quý','Giáp','Ất','Bính','Đinh','Mậu','Kỷ'];
+  const chi = ['Thân','Dậu','Tuất','Hợi','Tý','Sửu','Dần','Mão','Thìn','Tỵ','Ngọ','Mùi'];
+  return can[(year - 4) % 10] + ' ' + chi[(year - 4) % 12];
+}
+
+// Hàm tính Ngũ Hành từ năm
+function getNguHanh(year) {
+  const nh = ['Kim','Kim','Thủy','Thủy','Mộc','Mộc','Hỏa','Hỏa','Thổ','Thổ'];
+  return nh[(year - 4) % 10];
+}
+
+// Hiển thị từng section kết quả với hiệu ứng gõ chữ
+function typeText(el, text, speed = 18) {
+  return new Promise(resolve => {
+    el.innerHTML = '';
+    let i = 0;
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    el.appendChild(cursor);
+    const timer = setInterval(() => {
+      if (i < text.length) {
+        cursor.insertAdjacentText('beforebegin', text[i]);
+        i++;
+      } else {
+        clearInterval(timer);
+        cursor.remove();
+        resolve();
+      }
+    }, speed);
+  });
+}
+
+// Parse JSON an toàn
+function safeJSON(raw) {
+  try {
+    const clean = raw.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch(e) {
+    return null;
+  }
+}
+
+// Render các section AI trả về
+function renderSections(sections, personName) {
+  document.getElementById('air-person-name').textContent = personName;
+  document.getElementById('air-loading').style.display = 'none';
+  document.getElementById('air-content').style.display = 'block';
+
+  const container = document.getElementById('air-sections');
+  container.innerHTML = '';
+
+  const labels = {
+    menh: '🌟 Bản mệnh & Tính cách',
+    su_nghiep: '💼 Sự nghiệp & Công danh',
+    tai_chinh: '💰 Tài lộc & Tài chính',
+    tinh_cam: '❤️ Tình cảm & Hôn nhân',
+    van_han: '📅 Vận hạn hiện tại',
+    loi_khuyen: '✨ Lời khuyên cho bạn'
+  };
+
+  Object.entries(sections).forEach(([key, val]) => {
+    if (!val) return;
+    const sec = document.createElement('div');
+    sec.className = 'air-section';
+    sec.innerHTML = `
+      <div class="air-tag">${labels[key] || key}</div>
+      <div class="air-text" id="sec-${key}"></div>
+    `;
+    container.appendChild(sec);
+  });
+
+  // Gõ lần lượt từng section
+  (async () => {
+    for (const [key, val] of Object.entries(sections)) {
+      if (!val) continue;
+      const el = document.getElementById(`sec-${key}`);
+      if (el) {
+        // Đánh dấu từ in đậm **text**
+        const formatted = val.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        el.innerHTML = '';
+        // Gõ chữ plain text trước
+        await typeText(el, val.replace(/\*\*(.*?)\*\*/g, '$1'), 12);
+        // Sau đó render bold
+        el.innerHTML = formatted;
+        await new Promise(r => setTimeout(r, 300));
+      }
+    }
+  })();
+}
+
+// Hàm chính: submit form → gọi GPT-4o
+async function submitForm() {
+  const apiKey  = document.getElementById('apiKey').value.trim();
+  const name    = document.getElementById('f-name').value.trim();
+  const dob     = document.getElementById('f-dob').value.trim();
+  const hour    = document.getElementById('f-hour').value;
+  const gender  = document.querySelector('input[name="g"]:checked')?.value || 'Nam';
+
+  // Validate
+  if (!apiKey) { alert('⚠️ Bạn chưa nhập OpenAI API Key.'); return; }
+  if (!name)   { alert('⚠️ Bạn chưa nhập họ tên.'); return; }
+  if (!dob)    { alert('⚠️ Bạn chưa nhập ngày sinh.'); return; }
+  if (!hour)   { alert('⚠️ Bạn chưa chọn giờ sinh.'); return; }
+
+  // Parse năm từ dob (dd/mm/yyyy)
+  const parts = dob.split('/');
+  const year  = parts.length === 3 ? parseInt(parts[2]) : null;
+  const canChi   = year ? getCanChi(year)   : 'chưa xác định';
+  const nguHanh  = year ? getNguHanh(year)  : 'chưa xác định';
+  const dobFull  = parts.length === 3 ? `${parts[0]} tháng ${parts[1]} năm ${parts[2]}` : dob;
+
+  // UI: hiện panel loading
+  const resultEl = document.getElementById('ai-result');
+  resultEl.classList.add('visible');
+  document.getElementById('air-loading').style.display = 'flex';
+  document.getElementById('air-content').style.display = 'none';
+  document.getElementById('air-sections').innerHTML = '';
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Đang luận giải...';
+
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // ── SYSTEM PROMPT ──
+  const systemPrompt = `Bạn là chuyên gia tử vi đẩu số người Việt Nam, kết hợp kiến thức truyền thống với cách diễn đạt hiện đại, thân thiện.
+
+PHONG CÁCH VIẾT:
+- Thân thiện, gần gũi như đang nói chuyện trực tiếp — dùng "bạn" xuyên suốt
+- Tích cực, khích lệ — không phán xét, không dọa nạt
+- Cụ thể, thực tế — đưa ra gợi ý hành động rõ ràng
+- Tránh văn phong cổ lỗ, hoa mỹ quá mức
+- Dùng **từ quan trọng** để in đậm (tối đa 2–3 từ mỗi đoạn)
+- Mỗi mục khoảng 80–120 từ, ngắn gọn súc tích
+
+QUAN TRỌNG: Trả về JSON hợp lệ, không có markdown backtick, không giải thích thêm. Cấu trúc chính xác:
+{
+  "menh": "...",
+  "su_nghiep": "...",
+  "tai_chinh": "...",
+  "tinh_cam": "...",
+  "van_han": "...",
+  "loi_khuyen": "..."
+}`;
+
+  // ── USER PROMPT ──
+  const userPrompt = `Hãy luận giải tử vi cho:
+- Họ tên: ${name}
+- Giới tính: ${gender}
+- Ngày sinh: ${dobFull} (dương lịch)
+- Giờ sinh: ${hour}
+- Năm sinh Can Chi: ${canChi}
+- Ngũ Hành bản mệnh: ${nguHanh}
+
+Luận giải đầy đủ 6 mục theo đúng cấu trúc JSON yêu cầu. Giọng văn thân thiện, hiện đại, dùng "bạn".`;
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        max_tokens: 1800,
+        temperature: 0.8,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user',   content: userPrompt   }
+        ]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const raw  = data.choices?.[0]?.message?.content || '';
+    const parsed = safeJSON(raw);
+
+    if (!parsed) throw new Error('AI trả về định dạng không hợp lệ. Vui lòng thử lại.');
+
+    renderSections(parsed, name);
+
+  } catch (err) {
+    document.getElementById('air-loading').innerHTML =
+      `<span style="color:#ff6b6b">⚠️ ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Lập lá số miễn phí';
+  }
+}
 </script>
 </body>
 </html>
